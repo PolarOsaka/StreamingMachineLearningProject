@@ -1,0 +1,13 @@
+2026-07-15 07:09:22,162 | INFO | __main__ | Starting ETL pipeline...
+2026-07-15 07:09:22,162 | INFO | src.extract | Reading dataset from /workspaces/StreamingMachineLearningProject/data/raw/events.csv
+2026-07-15 07:09:23,560 | INFO | src.extract | Dataset validation successful.
+2026-07-15 07:09:23,560 | INFO | src.extract | Loaded 2756101 rows and 5 columns.
+2026-07-15 07:09:23,560 | INFO | src.bronze | Saving bronze dataset
+2026-07-15 07:09:24,487 | INFO | src.bronze | Bronze dataset saved to /workspaces/StreamingMachineLearningProject/data/bronze/events.parquet
+2026-07-15 07:09:24,497 | INFO | src.silver | Starting Silver layer creation process.
+2026-07-15 07:09:24,497 | INFO | src.silver | Reading Bronze file from: /workspaces/StreamingMachineLearningProject/data/bronze/events.parquet
+2026-07-15 07:09:25,183 | INFO | src.silver | Transformed timestamp
+2026-07-15 07:09:26,539 | INFO | src.silver | Removed 460 duplicate rows.
+2026-07-15 07:09:26,539 | INFO | src.silver | Saving cleaned data to Silver layer...
+2026-07-15 07:09:27,082 | INFO | src.silver | Successfully created Silver layer dataset at: /workspaces/StreamingMachineLearningProject/data/silver/cleaned_events.parquet
+2026-07-15 07:09:27,085 | INFO | __main__ | Pipeline completed successfully. Silver dataset available at /workspaces/StreamingMachineLearningProject/data/silver/cleaned_events.parquet
