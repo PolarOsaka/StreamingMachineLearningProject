@@ -19,6 +19,6 @@ def configure_logging() -> None:
             logging.FileHandler(LOG_FILE),
             logging.StreamHandler(),
         ],
-        #force=True # Supaya kalau ada config log lain, maka config log yang di force ini lah yg tetap dipakai
+        force=True # Supaya kalau ada config log lain, maka config log yang di force ini lah yg tetap dipakai
     )
 

@@ -305,10 +305,35 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: retailrocket # Nama cluster Kafka yang akan ditampilkan di halaman web dashboard
 
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092# Tempat Kafka-UI mencari Kafka. Karena di jaringan yang sama, maka cukup dinamai servicenya Kafka
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092 # Tempat Kafka-UI mencari Kafka. Karena di jaringan yang sama, maka cukup dinamai servicenya Kafka
 
     depends_on:
       - kafka # Supaya container Kafka jalan dulu lalu Kafka UI jalan
+
+    restart: unless-stopped
+
+  producer:
+    image: python:3.12-slim
+
+    container_name: replay-producer
+ 
+    working_dir: /app
+    environment:
+      - PYTHONPATH=/app # Supaya replay_producer bisa menggunakan modul streaming, walaupun streaming berada satu level folder di atas folder tempat replay_producer.py berada
+      # Maksud dari konfigurasi ini supaya replay_producer.py mencari modul dari seluruh isi folder app. Tidak hanya dari isi foldernya saja
+    volumes:
+      - ./:/app 
+    # Sinkronisasi dua arah secara real-time. 
+    # Jika kamu mengedit kode Python di komputermu, perubahan tersebut akan langsung instan ter-update di dalam kontainer 
+    # tanpa perlu melakukan build ulang kontainer Docker tersebut.
+    # Sehingga folder kontainer menjadi app/streaming/producer,consumer,settings.py
+
+    command: sh -c "pip install -r requirements.txt && sleep infinity" # Menjaga supaya kontainer producer tetap hidup di latar belakang sehingga kita bisa terus cek kodenya
+    # Kalau kode sudah matang, pakai command: python main.py, supaya fungsi langsung dijalankan begitu containernya menyala, lalu containernya exit sendiri (sesuai bawaan docker)
+    # Kafka dan airflow adalah proses yg jalan terus menerus sehingga di image sudah by default sleep infinity
+
+    depends_on:
+      - kafka
 
     restart: unless-stopped
 
