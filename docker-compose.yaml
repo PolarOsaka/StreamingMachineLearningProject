@@ -337,6 +337,49 @@ services:
 
     restart: unless-stopped
 
+  jobmanager:
+    build:
+      context: . # Artinya cari file dockerfile dari (konteks) folder utama
+      dockerfile: docker/flink/Dockerfile
+
+    container_name: flink-jobmanager
+
+    ports:
+      - "8082:8081"
+
+    command: jobmanager
+
+    volumes:
+      - ./:/app
+
+    environment:
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: jobmanager
+
+    restart: unless-stopped
+
+  taskmanager:
+    build:
+      context: .
+      dockerfile: docker/flink/Dockerfile
+
+    container_name: flink-taskmanager
+
+    depends_on:
+      - jobmanager
+
+    command: taskmanager
+
+    volumes:
+      - ./:/app
+
+    environment:
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2 
+
+    restart: unless-stopped
+
   # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
   # or by explicitly targeted on the command line e.g. docker-compose up flower.
   # See: https://docs.docker.com/compose/profiles/

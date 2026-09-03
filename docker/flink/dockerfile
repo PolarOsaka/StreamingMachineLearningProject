@@ -1,0 +1,14 @@
+FROM flink:1.20-java17
+
+# Semua perintah setelah baris ini akan menambahkan lapisan (layer) baru di atas image dasar tersebut.
+# Download Kafka connector
+# Karena image flink tidak bisa langsung connect ke eksternal.
+RUN wget -P /opt/flink/lib \
+https://repo1.maven.org/maven2/org/apache/flink/flink-connector-kafka/3.3.0-1.20/flink-connector-kafka-3.3.0-1.20.jar
+
+# wget: Program CLI untuk mengunduh file dari internet.
+# -P /opt/flink/lib: Singkatan dari Prefix path. Parameter ini menginstruksikan Docker untuk menyimpan file hasil unduhan langsung ke folder /opt/flink/lib.
+# Folder tersebut memang direktori standar untuk menyimpan dependensi eksternal
+# https://repo1.../flink-connector-kafka-...jar: URL lokasi penyimpanan file JAR resmi Kafka Connector versi 3.3.0 di Maven Central Repository.
+
+# Dengan begini, kita tinggal refer dockerfile ini untuk membuat image custom flink yang sudah memiliki koneksi ke kafka

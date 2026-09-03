@@ -24,7 +24,7 @@ def create_producer() -> KafkaProducer: # Membuat koneksi ke Kafka
         bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
         value_serializer=lambda value: json.dumps(
             value,
-            default=str,
+            default=str, # Jika value mengandung tipe data yang tidak dikenal json seperti UUID, maka dibuat jadi str
         ).encode("utf-8"),
     )
 
